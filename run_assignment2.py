@@ -27,8 +27,13 @@ def ask_ai(state0):
             print('Human won')
         return state1, True
     return state1, False
-# TODO
+
 def ask_player(state0):
+    """
+    A Method to get the input from the user.
+    :param state0:
+    :return: returns the satate and result of is_terminal() method
+    """
     move = int(input("Enter you column to move.(1-7)"))-1
     state1 = state0.result(move)
     print("------------")
