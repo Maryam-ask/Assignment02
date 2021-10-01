@@ -104,7 +104,6 @@ class FourInARow:
                         return True, -100
 
         # check negative diagonal
-        # TODO
         for c in range(7 - 3):
             for r in range(6 - 3, 6):
                 if len(self.board[c]) > r and len(self.board[c + 1]) > r - 1 and len(self.board[c + 2]) > r - 2 and len(
@@ -121,7 +120,6 @@ class FourInARow:
                         return True, -100
 
         # check draw
-        # TODO
         check_rows = 0
         for c in range(len(self.board)):
             if len(self.board[c]) == 6:
