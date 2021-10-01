@@ -69,10 +69,10 @@ class FourInARow:
                         return True, -100  # MIN player wins negative utility
 
         # check horizontal
-        for r in range(6):
+        for r in range(6):      # rows
             count = 0
             curr_chip = None
-            for c in range(0, len(self.board)):  # Rows
+            for c in range(0, len(self.board)):  # Columns should increase!
                 if r < len(self.board[c]):
                     if curr_chip == self.board[c][r]:
                         count = count + 1
