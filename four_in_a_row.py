@@ -144,6 +144,9 @@ class FourInARow:
                 for _ in range(6 - len(board_copy[c])):
                     board_copy[c].append("_")
 
+        for i in range(7):
+            print(i+1, "", end="")
+        print()
         for r in range(5, -1, -1):
             for c in range(7):
                 print(board_copy[c][r], end=" ")
