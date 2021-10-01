@@ -35,6 +35,10 @@ def ask_player(state0):
     :return: returns the satate and result of is_terminal() method
     """
     move = int(input("Enter you column to move.(1-7)"))-1
+    if move >= 7:
+        print("Error! try again!")
+        move = int(input("Enter you column to move.(1-7)"))-1
+
     state1 = state0.result(move)
     print("------------")
     print("Player moves")
