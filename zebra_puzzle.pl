@@ -3,6 +3,7 @@ Constraint store
 
 Author: Tony Lindgren
 
+Completed by : Maryam askari and Mahtab BabaMohammadi
 */
 :- use_module([library(clpfd)]).
 
