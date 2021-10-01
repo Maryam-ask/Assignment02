@@ -43,7 +43,7 @@ class GameSearch:
     
     def minimax_search(self): 
         start_time = process_time()   
-        _, move = self.max_value(self.state, self.depth)  
+        _, move = self.max_value(self.state, self.depth)
         return move
     
     def max_value(self, state, depth):
@@ -55,7 +55,10 @@ class GameSearch:
         actions = state.actions()
         for action in actions:
             new_state = state.result(action)
-            v2, _ = self.min_value(new_state, depth - 1)         
+            v2, _ = self.min_value(new_state, depth - 1)
+            if v2 > v:
+                move = action
+                v = v2
         return v, move
     
     def min_value(self, state, depth):
@@ -67,5 +70,8 @@ class GameSearch:
         actions = state.actions()
         for action in actions: 
             new_state = state.result(action)
-            v2, _ = self.max_value(new_state, depth - 1)                
+            v2, _ = self.max_value(new_state, depth - 1)
+            if v2 < v:
+                move = action
+                v = v2
         return v, move
