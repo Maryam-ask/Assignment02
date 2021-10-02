@@ -39,7 +39,7 @@ class FourInARow:
     def result(self, action):
         dc = deepcopy(self)
         if self.to_move() == 'w':
-            dc.curr_move = 'r'
+            #dc.curr_move = 'r'
             dc.board[action].append(self.to_move())
         else:
             dc.curr_move = 'w'
@@ -69,15 +69,18 @@ class FourInARow:
                         return True, -100  # MIN player wins negative utility
 
         # check horizontal
+        curr_col = 0
         for r in range(6):      # rows
             count = 0
             curr_chip = None
             for c in range(0, len(self.board)):  # Columns should increase!
                 if r < len(self.board[c]):
-                    if curr_chip == self.board[c][r]:
+                    if curr_chip == self.board[c][r] and curr_col+1 == c:
+                        curr_col = c
                         count = count + 1
                     else:
                         curr_chip = self.board[c][r]
+                        curr_col = c
                         count = 1
                     if count == 4:
                         if self.ai_player == curr_chip:
