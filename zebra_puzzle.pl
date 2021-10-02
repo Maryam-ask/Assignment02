@@ -67,6 +67,6 @@ zebra:-
         format(Format, Nation_connection),
         format(Format, Drink_connection),                                                          
         format(Format, Pet_connection), 
-        format(Format, Smoke_connection),
+        format(Format, Smoke_connection).
             
         
