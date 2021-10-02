@@ -10,5 +10,5 @@ ________________________________________________________________________________
 "why it is better that the lists represent columns instead of rows
 (if you come to another conclusion, explain why it is better to treat them as rows)?"
 Because in this game the inputs are from the columns numbers and it is easier to work with columns instead of the rows.
-On the other hand the numbers of rows are depending on the length of the columns.
+On the other hand the numbers of rows are depending on the length of the columns and also it's harder to implement.
 ________________________________________________________________________________________________________________________
