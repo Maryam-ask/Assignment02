@@ -29,10 +29,10 @@ state0 = state0.result(5)
 state0 = state0.result(6)
 
 print(state0.board)
-print(state0.actions())
-print(state0.pretty_print())
-print(len(state0.board[2]))
-print(state0.is_terminal())
+#print(state0.actions())
+#print(state0.pretty_print())
+#print(len(state0.board[2]))
+#print(state0.is_terminal())
 
 """from subprocess import Popen, PIPE, STDOUT
 
