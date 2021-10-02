@@ -39,7 +39,7 @@ class FourInARow:
     def result(self, action):
         dc = deepcopy(self)
         if self.to_move() == 'w':
-            #dc.curr_move = 'r'
+            dc.curr_move = 'r'
             dc.board[action].append(self.to_move())
         else:
             dc.curr_move = 'w'
