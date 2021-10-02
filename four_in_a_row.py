@@ -32,9 +32,11 @@ class FourInARow:
         A method to search for all possible action
         :return: A list of all columns which has empty row
         """
+        actions = []
         for c in range(len(self.board)):
             if len(self.board[c]) < 6:
-                yield c
+                actions.append(c)
+        return actions
 
     def result(self, action):
         dc = deepcopy(self)

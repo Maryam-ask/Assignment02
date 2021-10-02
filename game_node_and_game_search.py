@@ -52,7 +52,8 @@ class GameSearch:
         if terminal or depth == 0:
             return value, None
         v = -100000
-        actions = state.actions()
+        actions = list(state.actions())
+        random.shuffle(actions)
         for action in actions:
             new_state = state.result(action)
             v2, _ = self.min_value(new_state, depth - 1)
@@ -67,7 +68,8 @@ class GameSearch:
         if terminal or depth == 0:
             return value, None  
         v = 100000
-        actions = state.actions()
+        actions = list(state.actions())
+        random.shuffle(actions)
         for action in actions: 
             new_state = state.result(action)
             v2, _ = self.max_value(new_state, depth - 1)
