@@ -36,7 +36,7 @@ def ask_player(state0):
     """
     move = int(input("Enter you column to move.(1-7)")) - 1
 
-    while move >= 7 or move <= 0:
+    while move >= 7 or move < 0:
         print("[Error] Try Again!")
         move = int(input("Enter you column to move.(1-7)"))-1
 

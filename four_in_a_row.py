@@ -62,10 +62,10 @@ class FourInARow:
                     count = 1
                 if count == 4:
                     if self.ai_player == curr_chip:
-                        print('Found vertical win')
+                        #print('Found vertical win')
                         return True, 100  # MAX ai wins positive utility
                     else:
-                        print('Found vertical loss')
+                        #print('Found vertical loss')
                         return True, -100  # MIN player wins negative utility
 
         # check horizontal
@@ -76,18 +76,17 @@ class FourInARow:
             for c in range(0, len(self.board)):  # Columns should increase!
                 if r < len(self.board[c]):
                     if curr_chip == self.board[c][r] and curr_col+1 == c:
-                        curr_col = c
                         count = count + 1
                     else:
                         curr_chip = self.board[c][r]
-                        curr_col = c
                         count = 1
+                    curr_col = c
                     if count == 4:
                         if self.ai_player == curr_chip:
-                            print('Found horizontal win')
+                            #print('Found horizontal win')
                             return True, 100  # MAX ai wins positive utility
                         else:
-                            print('Found horizontal loss')
+                            #print('Found horizontal loss')
                             return True, -100
 
         # check positive diagonal
@@ -98,12 +97,12 @@ class FourInARow:
                     if self.ai_player == self.board[c][r] and self.ai_player == self.board[c + 1][
                         r + 1] and self.ai_player == self.board[c + 2][r + 2] and self.ai_player == self.board[c + 3][
                         r + 3]:
-                        print('Found positive diagonal win')
+                        #print('Found positive diagonal win')
                         return True, 100
                     elif self.ai_player != self.board[c][r] and self.ai_player != self.board[c + 1][
                         r + 1] and self.ai_player != self.board[c + 2][r + 2] and self.ai_player != self.board[c + 3][
                         r + 3]:
-                        print('Found positive diagonal loss')
+                        #print('Found positive diagonal loss')
                         return True, -100
 
         # check negative diagonal
@@ -114,20 +113,23 @@ class FourInARow:
                     if self.ai_player == self.board[c][r] and self.ai_player == self.board[c + 1][
                         r - 1] and self.ai_player == self.board[c + 2][r - 2] and self.ai_player == self.board[c + 3][
                         r - 3]:
-                        print('Found negative diagonal win')
+                        #print('Found negative diagonal win')
                         return True, 100
                     elif self.ai_player != self.board[c][r] and self.ai_player != self.board[c + 1][
                         r - 1] and self.ai_player != self.board[c + 2][r - 2] and self.ai_player != self.board[c + 3][
                         r - 3]:
-                        print('Found negative diagonal loss')
+                        #print('Found negative diagonal loss')
                         return True, -100
 
         # check draw
-        check_rows = 0
+        """check_rows = 0
         for c in range(len(self.board)):
             if len(self.board[c]) == 6:
                 check_rows += 1
         if check_rows == 6:
+            return True, 0"""
+        if not self.actions():  # if there is NO place to move
+            print("Nothing found, Draw!")
             return True, 0
 
         return False, 0
