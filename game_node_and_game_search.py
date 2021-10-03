@@ -49,11 +49,7 @@ class GameSearch:
         return move
 
     def select(self, tree: GameNode):
-        if not tree.actions_left:
-            return self.select(tree)
-        #choices_weights = [(c.q() / c.n()) + c_param * math.sqrt((2 * math.log(self.n())
-        pass
-
+        if
 
     def expand(self, leaf: GameNode):
         pass
