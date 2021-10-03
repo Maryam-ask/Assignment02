@@ -1,15 +1,16 @@
-'''
+"""
 Four in a row
 
 Author: Tony Lindgren
 
 Completed By: Maryam Askari and Mahtab BabaMohammadi
-'''
+"""
+
 from copy import deepcopy
 
 
 class FourInARow:
-    def __init__(self, player, chip):
+    def __init__(self, player, chip, parent=None):
         new_board = []
         for _ in range(7):
             new_board.append([])
@@ -22,6 +23,7 @@ class FourInARow:
         else:
             self.ai_player = 'w'
         self.curr_move = chip
+
 
     def to_move(self):
         return self.curr_move
@@ -137,7 +139,7 @@ class FourInARow:
         return False, 0
 
 
-        # pretty_print
+    # pretty_print
     def pretty_print(self):
         """
         A method to print out the board.
