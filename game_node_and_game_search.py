@@ -66,6 +66,10 @@ class GameSearch:
 
     def actions(self, tree: GameNode):
         pass
+
+    def ucb1_calculator(self, si):
+        si.ucb1 = si.vi + 2 * math.sqrt(math.log2(si.node.number_of_visit)/si.number_of_visit)
+        return si.vi
     
     def minimax_search(self): 
         start_time = process_time()   
