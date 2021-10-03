@@ -18,6 +18,7 @@ class GameNode:
     def __init__(self, state, node=None):
         self.state = state
         self.node = node
+        self.number_of_visit = 0
            
 class GameSearch:
     '''
