@@ -16,20 +16,26 @@ class GameNode:
     state
     '''
     def __init__(self, state, node=None):
-        self.state = state   
+        self.state = state
+        self.node = node
            
 class GameSearch:
     '''
     Class containing different game search algorithms, call it with a defined game/node
     '''                 
-    def __init__(self, game, depth=3):
+    def __init__(self, game, depth=3, time=None):
         self.state = game       
         self.depth = depth
+        self.time = time
+
+    def win_loss(self):
+        _, result = self.state.is_terminal()
+        return result
 
     def mcts(self):                     
         start_time = process_time() 
         tree = GameNode(self.state)
-        tree.actions_left = tree.state.actions()   
+        tree.actions_left = tree.state.actions()    # A list of possible actions from four_in_a_row
         elapsed_time = 0
         while elapsed_time < self.time:   
             leaf = self.select(tree)
@@ -40,6 +46,25 @@ class GameSearch:
             elapsed_time = stop_time - start_time
         move = self.actions(tree)
         return move
+
+    def select(self, tree: GameNode):
+        if not tree.actions_left:
+            return self.select(tree)
+        #choices_weights = [(c.q() / c.n()) + c_param * math.sqrt((2 * math.log(self.n())
+        pass
+
+
+    def expand(self, leaf: GameNode):
+        pass
+
+    def simulate(self, child: GameNode):
+        pass
+
+    def back_propagate(self, result: GameNode, child: GameNode):
+        pass
+
+    def actions(self, tree: GameNode):
+        pass
     
     def minimax_search(self): 
         start_time = process_time()   
