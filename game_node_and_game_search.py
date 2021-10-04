@@ -41,8 +41,8 @@ class GameSearch:
         elapsed_time = 0
         while elapsed_time < self.time:   
             leaf = self.select(tree, root)
-            # child = self.expand(leaf)
-            result = self.simulate(leaf)
+            child = self.expand(leaf)
+            result = self.simulate(child)
             self.back_propagate(result, leaf)
             stop_time = process_time()
             elapsed_time = stop_time - start_time
@@ -65,7 +65,9 @@ class GameSearch:
 
 
     def expand(self, leaf):
-        pass
+        child = leaf.state.actions()
+        random.shuffle(child)
+        return child
 
     def simulate(self, si):
         while True:
@@ -85,10 +87,10 @@ class GameSearch:
             si = si.node
 
     def actions(self, tree):
-        return  tree
+        return tree
 
     def ucb1_calculator(self, si):
-        si.ucb1 = si.vi + 2 * math.sqrt(math.log2(si.node.number_of_visit)/si.number_of_visit)
+        si.ucb1 = si.vi + 1.4 * math.sqrt(math.log2(si.node.number_of_visit)/si.number_of_visit)
         return si.vi
 
     def minimax_search(self): 
