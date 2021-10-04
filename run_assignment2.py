@@ -39,7 +39,8 @@ def ask_player(state0):
     """
     move = int(input("Enter you column to move.(1-7)")) - 1
 
-    while move >= 7 or move < 0:
+
+    while not checking_valid_move(move, state0):
         print("[Error] Try Again!")
         move = int(input("Enter you column to move.(1-7)"))-1
 
@@ -56,6 +57,18 @@ def ask_player(state0):
             print("Human won")
         return state1, True
     return state1, False
+
+def checking_valid_move(move, state):
+    """
+    A method to check for valid move in a state
+    :param move: number of the column
+    :param state: A state
+    :return: True if it is valid move
+    """
+    if move < 7 and move >= 0:
+        if move in state.actions():
+            return True
+    return False
 
 def main():
     print('Welcome to play for-in-a-row!')

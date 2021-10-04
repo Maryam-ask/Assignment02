@@ -15,10 +15,26 @@ class GameNode:
     This class defines game nodes in game search trees. It keep track of: 
     state
     '''
-    def __init__(self, state, node=None):
+    def __init__(self, state, node=None):   # Node is parent
         self.state = state
         self.node = node
+        self.depth = 0
+        if node:
+            self.depth = node.depth + 1
         self.number_of_visit = 0
+        self.node_wins = 0
+        self.children = []      # A list of children
+        self.untried_moves = self.state.actions()   # A list of all possible moves!
+
+    def node_children(self):
+        node = self.state.actions()
+        self.untried_moves.remove(node)
+        self.children.append(node)
+        return node
+
+    def win_visited(self, result):
+        self.number_of_visit = 1 + self.number_of_visit
+        self.node_wins = 1 + self.node_wins
            
 class GameSearch:
     '''
@@ -28,10 +44,6 @@ class GameSearch:
         self.state = game       
         self.depth = depth
         self.time = time
-
-    def win_loss(self):
-        _, result = self.state.is_terminal()
-        return result
 
     def mcts(self):                     
         start_time = process_time() 
@@ -49,7 +61,10 @@ class GameSearch:
         return move
 
     def select(self, tree: GameNode):
-        if
+        if len(tree.untried_moves) == 0 and len(tree.children)!=0:
+            return self.select(tree.state.result().node_children())
+        return tree.node
+
 
     def expand(self, leaf: GameNode):
         pass
@@ -63,10 +78,16 @@ class GameSearch:
     def actions(self, tree: GameNode):
         pass
 
-    def ucb1_calculator(self, si):
-        si.ucb1 = si.vi + 2 * math.sqrt(math.log2(si.node.number_of_visit)/si.number_of_visit)
-        return si.vi
-    
+    def ucb1_calculator(self):
+        max_ucb = 0
+        max_child = None
+        for child in self.state.children:
+            ucb1 = child.node_wins / child.number_of_visit + 1.4 * math.sqrt(math.log(self.state.number_of_visit) / child.number_of_visit)
+            if ucb1 > max_ucb:
+                max_child = child
+                max_ucb = ucb1
+        return max_child
+
     def minimax_search(self): 
         start_time = process_time()   
         _, move = self.max_value(self.state, self.depth)
