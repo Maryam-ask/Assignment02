@@ -15,12 +15,12 @@ class GameNode:
     This class defines game nodes in game search trees. It keep track of: 
     state
     '''
-    def __init__(self, state, node=None):   # Node is parent
+    def __init__(self, state, parent=None):
         self.state = state
-        self.node = node
+        self.parent = parent
         self.depth = 0
-        if node:
-            self.depth = node.depth + 1
+        if parent:
+            self.depth = parent.depth + 1
         self.number_of_visit = 0
         self.node_wins = 0
         self.children = []      # A list of children
@@ -35,6 +35,16 @@ class GameNode:
     def win_visited(self, result):
         self.number_of_visit = 1 + self.number_of_visit
         self.node_wins = 1 + self.node_wins
+
+    def ucb1_calculator(self):
+        max_ucb = 0
+        max_child = None
+        for child in self.state.children:
+            ucb1 = child.node_wins / child.number_of_visit + 1.4 * math.sqrt(math.log(self.state.number_of_visit) / child.number_of_visit)
+            if ucb1 > max_ucb:
+                max_child = child
+                max_ucb = ucb1
+        return max_child
            
 class GameSearch:
     '''
@@ -62,31 +72,44 @@ class GameSearch:
 
     def select(self, tree: GameNode):
         if len(tree.untried_moves) == 0 and len(tree.children)!=0:
-            return self.select(tree.state.result().node_children())
+            move = tree.state.actions()
+            random.shuffle(move)
+            node = move.ucb1_calculator()
+            return self.select(node)
         return tree.node
 
 
     def expand(self, leaf: GameNode):
-        pass
+        if leaf.untried_moves != 0:
+            move = random.shuffle(leaf.untried_moves)
+            leaf = leaf.state.result(move)
+        return leaf
 
     def simulate(self, child: GameNode):
-        pass
+        invert_reward = True
+        while True:
+            if node.is_terminal():
+                terminal,reward = child.state.is_teminal()
+                return 1 - reward if invert_reward else reward
+            node = node.find_random_child()
+            invert_reward = not invert_reward
 
     def back_propagate(self, result: GameNode, child: GameNode):
-        pass
+        if self.state.parent is None:
+            return
+        else:
+           return result.state.parent.back_propagate(result)
+
 
     def actions(self, tree: GameNode):
-        pass
+        if len(tree.untried_moves):
+            move = tree.state.actions()
+            random.shuffle(move)
+            new_state = tree.state.result(move)
+            return new_state
 
-    def ucb1_calculator(self):
-        max_ucb = 0
-        max_child = None
-        for child in self.state.children:
-            ucb1 = child.node_wins / child.number_of_visit + 1.4 * math.sqrt(math.log(self.state.number_of_visit) / child.number_of_visit)
-            if ucb1 > max_ucb:
-                max_child = child
-                max_ucb = ucb1
-        return max_child
+
+
 
     def minimax_search(self): 
         start_time = process_time()   
