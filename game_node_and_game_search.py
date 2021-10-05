@@ -15,26 +15,25 @@ class GameNode:
     This class defines game nodes in game search trees. It keep track of: 
     state
     '''
-    def __init__(self, state, parent=None):
+    def __init__(self, state, parent=None, action=None):
         self.state = state
         self.parent = parent
+        self.action = action
         self.depth = 0
         if parent:
             self.depth = parent.depth + 1
         self.number_of_visit = 0
         self.node_wins = 0
-        self.children = []      # A list of children
         self.untried_moves = self.state.actions()   # A list of all possible moves!
 
     def node_children(self):
-        node = self.state.actions()
-        self.untried_moves.remove(node)
-        self.children.append(node)
-        return node
-
-    def win_visited(self, result):
-        self.number_of_visit = 1 + self.number_of_visit
-        self.node_wins = 1 + self.node_wins
+        children = []
+        for action in self.state.actions():
+            child = self.state.result(action)
+            if child != None:
+                childNode = GameNode(child, self, action)
+                children.append(childNode)
+        return children
 
     def ucb1_calculator(self):
         max_ucb = 0
@@ -64,49 +63,46 @@ class GameSearch:
             leaf = self.select(tree)
             child = self.expand(leaf)               
             result = self.simulate(child) 
-            self.back_propagate(result, child)         
+            #self.back_propagate(result, child)
             stop_time = process_time()
             elapsed_time = stop_time - start_time
         move = self.actions(tree)
         return move
 
-    def select(self, tree: GameNode):
+    def select(self, tree):
         if len(tree.untried_moves) == 0 and len(tree.children)!=0:
-            move = tree.state.actions()
-            random.shuffle(move)
-            node = move.ucb1_calculator()
-            return self.select(node)
-        return tree.node
+            tree.number_of_visit += 1
+            for child in tree.node_children():
+                ucb1 = child.ucb1_calculator()
+                #if ucb1 > max_ucb1:
+                return child
+            # self.select(child)
 
 
-    def expand(self, leaf: GameNode):
-        if leaf.untried_moves != 0:
-            move = random.shuffle(leaf.untried_moves)
-            leaf = leaf.state.result(move)
-        return leaf
+    def expand(self, leaf):
+        child = leaf.node_children()
+        random.shuffle(child)
+        return child
 
-    def simulate(self, child: GameNode):
-        invert_reward = True
-        while True:
-            if node.is_terminal():
-                terminal,reward = child.state.is_teminal()
-                return 1 - reward if invert_reward else reward
-            node = node.find_random_child()
-            invert_reward = not invert_reward
+    def simulate(self, child):
+        terminal, value = child.state.is_terminal()
+        if terminal:
+            return value
+        child.node_wins += 1
+        return child.node_wins
 
-    def back_propagate(self, result: GameNode, child: GameNode):
+
+    def back_propagate(self, result, child):
         if self.state.parent is None:
             return
         else:
            return result.state.parent.back_propagate(result)
 
 
-    def actions(self, tree: GameNode):
-        if len(tree.untried_moves):
-            move = tree.state.actions()
-            random.shuffle(move)
-            new_state = tree.state.result(move)
-            return new_state
+    def actions(self, tree):
+        move = tree.state.actions()
+        random.shuffle(move)
+        return move
 
 
 
