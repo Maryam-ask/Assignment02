@@ -10,6 +10,7 @@ import random
 import math
 
 
+
 class GameNode:
     '''
     This class defines game nodes in game search trees. It keep track of: 
@@ -19,31 +20,26 @@ class GameNode:
         self.state = state
         self.parent = parent
         self.action = action
-        self.depth = 0
-        if parent:
-            self.depth = parent.depth + 1
         self.number_of_visit = 0
         self.node_wins = 0
-        self.untried_moves = self.state.actions()   # A list of all possible moves!
+        self.untried_moves = self.state.actions()  # A list of all possible moves!
+        self.children= []
 
-    def node_children(self):
-        children = []
-        for action in self.state.actions():
-            child = self.state.result(action)
-            if child != None:
-                childNode = GameNode(child, self, action)
-                children.append(childNode)
-        return children
+    def node_children(self, children):
+        children_ubc1 = {}
+        for child in children:
+            children_ubc1[child] = child.ucb1_calculator()
+        return max(children_ubc1, key=children_ubc1.get)
+
+    def most_visited(self, children):
+        children_visit = {}
+        for child in children:
+            children_visit[child] = child.number_of_visit
+            return max(children_visit, key=children_visit.get)
 
     def ucb1_calculator(self):
-        max_ucb = 0
-        max_child = None
-        for child in self.state.children:
-            ucb1 = child.node_wins / child.number_of_visit + 1.4 * math.sqrt(math.log(self.state.number_of_visit) / child.number_of_visit)
-            if ucb1 > max_ucb:
-                max_child = child
-                max_ucb = ucb1
-        return max_child
+        ucb1 = self.node_wins / self.number_of_visit + math.sqrt(2) * math.sqrt(math.log(self.parent.number_of_visit) / self.number_of_visit)
+        return ucb1
            
 class GameSearch:
     '''
@@ -59,57 +55,78 @@ class GameSearch:
         tree = GameNode(self.state)
         tree.actions_left = tree.state.actions()    # A list of possible actions from four_in_a_row
         elapsed_time = 0
-        while elapsed_time < self.time:   
+        while elapsed_time < self.time:
             leaf = self.select(tree)
-            child = self.expand(leaf)               
-            result = self.simulate(child) 
-            #self.back_propagate(result, child)
+            child = self.expand(leaf)
+            result = self.simulate(child)
+            self.back_propagate(result, child)
             stop_time = process_time()
             elapsed_time = stop_time - start_time
         move = self.actions(tree)
         return move
 
     def select(self, tree):
-        if len(tree.untried_moves) == 0 and len(tree.children)!=0:
-            tree.number_of_visit += 1
-            for child in tree.node_children():
-                ucb1 = child.ucb1_calculator()
-                #if ucb1 > max_ucb1:
-                return child
-            # self.select(child)
-
+        """
+        A Method which get the root node and from root node get all the children and calculate ucb1 for the all children
+        and return the child which has greater value in ucb1
+        :param tree: Getting the root node
+        :return: the child node with greater ucb1
+        """
+        if tree.untried_moves == []:
+            tree = tree.node_children(tree.children)
+            return self.select(tree)
+        return tree
 
     def expand(self, leaf):
-        child = leaf.node_children()
-        random.shuffle(child)
-        return child
+        terminal, value = leaf.state.is_terminal()
+        if not terminal:
+            action = random.choice(leaf.untried_moves)
+            leaf.untried_moves.remove(action)
+            next_move = leaf.state.result(action)
+            child_move = GameNode(next_move, leaf, action)
+            leaf.children.append(child_move)
+            return child_move
+        return leaf
+
 
     def simulate(self, child):
-        terminal, value = child.state.is_terminal()
-        if terminal:
-            return value
-        child.node_wins += 1
-        return child.node_wins
+        stop, value = child.state.is_terminal()
+        while not stop:
+            action = random.choice(child.state.actions())  #
+            new_state = child.state.result(action)
+            stop, value = new_state.is_terminal()
+
+        if value == 0:
+            return None
+        if new_state.to_move() == 'r':
+            winning_chip = 'w'
+        else:
+            winning_chip = 'r'
+        return winning_chip
 
 
     def back_propagate(self, result, child):
-        if self.state.parent is None:
-            return
-        else:
-           return result.state.parent.back_propagate(result)
-
+        while child != None:
+            if result == child.state.to_move():
+                child.number_of_visit += 1
+                child.node_wins += 1
+            else:
+                child.number_of_visit += 1
+            child = child.parent
 
     def actions(self, tree):
-        move = tree.state.actions()
-        random.shuffle(move)
-        return move
-
-
+        children = tree.children
+        most_visited_node = tree.most_visited(children)
+        return most_visited_node.untried_moves
 
 
     def minimax_search(self): 
-        start_time = process_time()   
-        _, move = self.max_value(self.state, self.depth)
+        start_time = process_time()
+        elapsed_time = 0
+        while elapsed_time < self.time:
+            _, move = self.max_value(self.state, self.depth)
+            stop_time = process_time()
+            elapsed_time = stop_time - start_time
         return move
     
     def max_value(self, state, depth):
@@ -132,7 +149,7 @@ class GameSearch:
         move = None
         terminal, value = state.is_terminal()
         if terminal or depth == 0:
-            return value, None  
+            return value, None
         v = 100000
         actions = state.actions()
         random.shuffle(actions)
@@ -146,7 +163,11 @@ class GameSearch:
 
     def alpha_beta_search(self):
         start_time = process_time()
-        _, move = self.alpha_value(self.state, self.depth, a=-math.inf, b=+math.inf)
+        elapsed_time = 0
+        while elapsed_time < self.time:
+            _, move = self.alpha_value(self.state, self.depth, a=-math.inf, b=+math.inf)
+            stop_time = process_time()
+            elapsed_time = stop_time - start_time
         return move
 
     def alpha_value(self, state, depth, a=-math.inf, b=+math.inf):
