@@ -50,8 +50,9 @@ class FourInARow:
             dc.board[action].append(self.to_move())
         return dc
 
-    # eval
-    # TODO
+    def eval(self):
+        center = self.board[3][3]
+
 
     def is_terminal(self):
         # check vertical

@@ -12,12 +12,11 @@ from game_node_and_game_search import GameSearch
 def ask_ai(state0):
     gs = GameSearch(state0, depth=3)
     '''MinMax_search'''
-    # move = gs.minimax_search()
+    #move = gs.minimax_search()
     '''Alpha_beta_search'''
-    # move = gs.alpha_beta_search()
-    # gs = GameSearch(state0, depth=3, time=20)
-    '''mct Search'''
-    move = gs.mcts()
+    move = gs.alpha_beta_search()
+    #gs = GameSearch(state0, depth=3, time=20)
+    #move = gs.mcts()
     state1 = state0.result(move)
     print('--------')
     print('AI moves')
@@ -77,7 +76,7 @@ def main():
                 if stop2:
                     break                
     else:
-        state0 = FourInARow('ai', 'w')
+        state0 = FourInARow('ai','w') 
         stop = False
         while not stop: 
         #AI move
