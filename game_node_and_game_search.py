@@ -45,7 +45,7 @@ class GameSearch:
     '''
     Class containing different game search algorithms, call it with a defined game/node
     '''                 
-    def __init__(self, game, depth=3, time=None):
+    def __init__(self, game, depth=3, time=0):
         self.state = game       
         self.depth = depth
         self.time = time
@@ -123,7 +123,7 @@ class GameSearch:
     def minimax_search(self): 
         start_time = process_time()
         elapsed_time = 0
-        while elapsed_time < self.time:
+        while elapsed_time <= self.time:
             _, move = self.max_value(self.state, self.depth)
             stop_time = process_time()
             elapsed_time = stop_time - start_time
@@ -164,7 +164,7 @@ class GameSearch:
     def alpha_beta_search(self):
         start_time = process_time()
         elapsed_time = 0
-        while elapsed_time < self.time:
+        while elapsed_time <= self.time:
             _, move = self.alpha_value(self.state, self.depth, a=-math.inf, b=+math.inf)
             stop_time = process_time()
             elapsed_time = stop_time - start_time

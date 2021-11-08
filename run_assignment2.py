@@ -10,7 +10,7 @@ from game_node_and_game_search import GameSearch
 
     
 def ask_ai(state0):
-    gs = GameSearch(state0, depth=3, time=20)
+    gs = GameSearch(state0, depth=3)
     '''MinMax_search'''
     move = gs.minimax_search()
     '''Alpha_beta_search'''
