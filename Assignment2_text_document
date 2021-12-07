@@ -1,11 +1,10 @@
 Assignment 2:
+Games and Constraint Satisfaction Programming (CSP)
 
 Group members:
 Maryam Askari
 Mahtab Babamohammadi
 ________________________________________________________________________________________________________________________
-Files included in the assignment:
-
 ________________________________________________________________________________________________________________________
 "why it is better that the lists represent columns instead of rows
 (if you come to another conclusion, explain why it is better to treat them as rows)?"
@@ -18,5 +17,16 @@ we get the value of the move and we chose the state by choosing the minimum or t
 maximum and next time is minimum until we reach the goal state then we go recursively back to the root state.
 ________________________________________________________________________________________________________________________
 "Alfa-beta , does it play much better?"
-we can se that AI plays smarter.
+we can se that AI plays smarter but steal it needs some improvement to play smarter.
 ________________________________________________________________________________________________________________________
+"Try the MCTS game out, is it playing better than minimax?"
+Yes, but it plays slowly, it takes longer time for AI to play because in our function the algorithm goes in depth leaf
+based on the processing time.
+ But it plays smarter.
+________________________________________________________________________________________________________________________
+"In MCTS, how do you the handle draws?"
+In each time iteration, the algorithm will chose a node with the most UBC1 value and most visited. In simulate() function
+we evaluate the win an drw by using is_terminal() function. For compute win value in is_terminal() function we used 0 for
+draw. In simulate() function it gets all children and try to find the one with higher value.
+________________________________________________________________________________________________________________________
+

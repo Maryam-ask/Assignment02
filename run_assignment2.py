@@ -11,14 +11,18 @@ from game_node_and_game_search import GameSearch
     
 def ask_ai(state0):
     gs = GameSearch(state0, depth=3)
-    '''initiate a new GameSearch with parameter time'''
-    #gs = GameSearch(state0, depth=3, time=20)
-    '''MinMax_search'''
+    '''  initiate a new GameSearch with parameter time  '''
+    #gs = GameSearch(state0, depth=3, time=0.2)
+
+    ''' MinMax_search  '''
     #move = gs.minimax_search()
-    '''Alpha_beta_search'''
+
+    ''' Alpha_beta_search  '''
     move = gs.alpha_beta_search()
-    '''MCTS search'''
+
+    '''  MCTS search  '''
     #move = gs.mcts()
+
     state1 = state0.result(move)
     print('--------')
     print('AI moves')

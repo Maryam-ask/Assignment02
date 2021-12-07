@@ -9,8 +9,6 @@ from time import process_time
 import random
 import math
 
-
-
 class GameNode:
     '''
     This class defines game nodes in game search trees. It keep track of: 
@@ -20,18 +18,33 @@ class GameNode:
         self.state = state
         self.parent = parent
         self.action = action
-        self.number_of_visit = 0
+        self.number_of_visit = 0    # How many times a node is visited
         self.node_wins = 0
         self.untried_moves = self.state.actions()  # A list of all possible moves!
         self.children= []
 
+    def children(self):
+        children = []
+        for action in self.state.actions():
+            child = self.state.result(action)
+            if child is not None:
+                childNode = GameNode(child, self, action)
+                children.append(childNode)
+        return children
+
     def node_children(self, children):
-        children_ubc1 = {}
+        """
+        A method that return the child of children with the maximum UBC value
+        """
+        children_ubc1 = {}  # A dictionary to store ubc1 values of all the children.
         for child in children:
             children_ubc1[child] = child.ucb1_calculator()
         return max(children_ubc1, key=children_ubc1.get)
 
     def most_visited(self, children):
+        """
+        A Method to return a child with highest number of visit.
+        """
         children_visit = {}
         for child in children:
             children_visit[child] = child.number_of_visit
@@ -40,20 +53,21 @@ class GameNode:
     def ucb1_calculator(self):
         ucb1 = self.node_wins / self.number_of_visit + math.sqrt(2) * math.sqrt(math.log(self.parent.number_of_visit) / self.number_of_visit)
         return ucb1
-           
+
+
 class GameSearch:
     '''
     Class containing different game search algorithms, call it with a defined game/node
-    '''                 
+    '''
     def __init__(self, game, depth=3, time=0):
-        self.state = game       
+        self.state = game
         self.depth = depth
         self.time = time
 
-    def mcts(self):                     
-        start_time = process_time() 
+    def mcts(self):
+        start_time = process_time()
         tree = GameNode(self.state)
-        tree.actions_left = tree.state.actions()    # A list of possible actions from four_in_a_row
+        tree.untried_moves = tree.state.actions()    # A list of possible actions from four_in_a_row
         elapsed_time = 0
         while elapsed_time < self.time:
             leaf = self.select(tree)
@@ -73,7 +87,7 @@ class GameSearch:
         :return: the child node with greater ucb1
         """
         if tree.untried_moves == []:
-            tree = tree.node_children(tree.children)
+            tree = tree.node_children(tree.children())
             return self.select(tree)
         return tree
 
@@ -87,7 +101,6 @@ class GameSearch:
             leaf.children.append(child_move)
             return child_move
         return leaf
-
 
     def simulate(self, child):
         stop, value = child.state.is_terminal()
@@ -104,7 +117,6 @@ class GameSearch:
             winning_chip = 'r'
         return winning_chip
 
-
     def back_propagate(self, result, child):
         while child != None:
             if result == child.state.to_move():
@@ -115,12 +127,15 @@ class GameSearch:
             child = child.parent
 
     def actions(self, tree):
-        children = tree.children
-        most_visited_node = tree.most_visited(children)
-        return most_visited_node.untried_moves
+        #children = tree.children
+        most_visited_node = tree.most_visited(tree.children())
+        #most_visited_node = tree.most_visited(children)
+        print(most_visited_node)
+        return most_visited_node.untried_moves  # A list of all possible moves!
+        """actions = most_visited_node.untried_moves
+        return random.choice(actions)"""
 
-
-    def minimax_search(self): 
+    def minimax_search(self):
         start_time = process_time()
         elapsed_time = 0
         while elapsed_time <= self.time:
@@ -128,7 +143,7 @@ class GameSearch:
             stop_time = process_time()
             elapsed_time = stop_time - start_time
         return move
-    
+
     def max_value(self, state, depth):
         move = None
         terminal, value = state.is_terminal()
@@ -144,7 +159,7 @@ class GameSearch:
                 move = action
                 v = v2
         return v, move
-    
+
     def min_value(self, state, depth):
         move = None
         terminal, value = state.is_terminal()

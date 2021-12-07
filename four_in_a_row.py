@@ -48,8 +48,17 @@ class FourInARow:
             dc.board[action].append(self.to_move())
         return dc
 
-    def eval(self):
-        center = self.board[3][3]
+    def eval(self, state):
+        rate = 0
+        if self.board[3]:
+            rate += 3
+        elif self.board[2] or self.board[4]:
+            rate +=2
+        elif self.board[1] or self.board[5]:
+            rate += 1
+        else:
+            rate += 0
+        return rate
 
 
     def is_terminal(self):
